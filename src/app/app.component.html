@@ -1,54 +1,77 @@
-
-<div class="buttonMenu">
-  <div class="example-button-row">
-
-    <button mat-flat-button color="primary" (click)="addMachine()">Add-Machine</button>
-
-  </div>
-</div>
 <div class="container">
-  <mat-card>
+  <mat-card style="border:black solid 1px">
     <div class="example-container">
       <div class="title">
-        <h2>Maquina 1</h2>
+        <h4>{{title}}</h4>
+        <button class="button" (click)="showListOperator()" mat-raised-button color="primary">Show list</button>
       </div>
+      <div *ngIf="showList">
+        <div class="table-responsive user-list">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">First</th>
+                <th scope="col">Last</th>
+                <th scope="col">Email</th>
+              </tr>
+            </thead>
+            <tbody [cdkDropListData]="dataList" cdkDropList id="list-1" [cdkDropListConnectedTo]="listConnectedTo"
+              (cdkDropListDropped)="drop($event)">
+              <tr *ngFor="let item of dataList" cdkDrag [cdkDragDisabled]="item.disabled">
+                <div *cdkDragPreview>
+                  <app-drag-preview [dataShow]="item"></app-drag-preview>
+                </div>
+                <th class="col-xs">
+                  <div class="drag-handle">
+                    {{ item.project }}
+                  </div>
+                </th>
+                <td class="col-md">
+                  {{ item.name }}</td>
+                <td class="col-md">
+                  {{ item.category }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </mat-card>
+  <div *ngFor="let machine of machineFromService">
+    <mat-card class="colorHover">
       <div>
-        <div style="background-image: url(../assets/descarga.jpg);" cdkDropList #machine1List="cdkDropList" [cdkDropListData]="todos" [cdkDropListConnectedTo]="[employerList]"
-        class="example-list" (cdkDropListDropped)="drop($event)">
-        <div class="example-box" [cdkDragDisabled]="item.disabled" *ngFor="let item of todos" cdkDrag
-          [ngStyle]="{'background': item.color }" style="opacity: 0.3">{{item.name}}</div>
+        <div class="title">
+          <h4>{{machine.title}}</h4>
+        </div>
+        <div class="content-list-drop">
+          <div class="project-area">
+            <tr>
+              <td>
+                <h4>Project: </h4>
+              </td>
+              <td>
+                <div *ngIf="projectTitle">
+                  <h4>{{projectTitle.project}}</h4>
+                </div>
+              </td>
+            </tr>
+          </div>
+          <div cdkDropList id={{machine.id}} [cdkDropListData]="machine.dataMachine"
+            [cdkDropListConnectedTo]="['list-1']" class="example-list list-container-drop"
+            (cdkDropListDropped)="drop($event)">
+            <div class="example-box list-items-svg" *ngFor="let item of machine.dataMachine" cdkDrag>
+              {{item.name}}
+            </div>
+          </div>
+          <div style="margin-top: 10px;">
+            <h4>Timer</h4>
+            <div class="timer" [ngStyle]="{'background-color': color}">
+              <h4> {{timer}}</h4>
+            </div>
+          </div>
+        </div>
       </div>
-        <h2>Total Items</h2>
-        <h2> {{totalItems}}</h2>
-      </div>
-
-    </div>
-  </mat-card>
-  <mat-card>
-    <div class="example-container">
-      <div class="title">
-        <h2>Operarios</h2>
-      </div>
-      <div cdkDropList #employerList="cdkDropList" [cdkDropListData]="completed" [cdkDropListConnectedTo]="[machine1List,machine2List]"
-        class="example-list" (cdkDropListDropped)="drop($event)">
-        <div class="example-box" *ngFor="let item of completed" cdkDrag
-        [ngStyle]="{'background': item.color }">{{item.name}}</div>
-      </div>
-    </div>
-  </mat-card>
-  <mat-card>
-    <div class="example-container">
-      <div class="title">
-        <h2>Maquina 2</h2>
-      </div>
-      <div>
-        <img src="../assets/imagenChica.jpg">
-      </div>
-      <div cdkDropList #machine2List="cdkDropList" [cdkDropListData]="maquina" [cdkDropListConnectedTo]="[employerList]"
-        class="example-list" (cdkDropListDropped)="drop($event)">
-        <div class="example-box" [cdkDragDisabled]="item.disabled" *ngFor="let item of maquina" cdkDrag
-          [ngStyle]="{'background': item.color }">{{item.name}}</div>
-      </div>
-    </div>
-  </mat-card>
+    </mat-card>
+  </div>
 </div>
